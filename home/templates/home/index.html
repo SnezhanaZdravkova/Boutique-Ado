@@ -1,6 +1,38 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block page_header %}
+    <div class="container header-container">
+        <div class="row">
+            <div class="col"></div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block content %}
-<h1 class="display-4 text-success">It works</h1>
+<!-- Basic bootstrap grid. -->
+<!-- I also want this entire column to be vertically centred
+so I'll add the h-100 class to both the container and the row to give them 100% height
+And the my-auto class to the column to vertically Center it -->
+    <div class="container h-100">
+        <div class="row h-100">
+            <!-- We want the column to sit to the left side of the screen since the woman
+in the home page image is featured on the right.
+I'll use seven columns by default.
+And six columns on medium and larger screens -->
+            <div class="col-7 col-md-6 my-auto">
+                <!-- class display-4 from bootstrap. -->
+                <h1 class="display-4 logo-font text-black">
+                    The new collections are here
+                </h1>
+                <!-- Margin -->
+                <div class="my-5">
+                    <h4>
+                        <!-- Classes from bootstrap button, button-large, rounded-0, text- uppercase, and py-3 -->
+                        <a href="" class="shop-now-button btn btn-lg rounded-0 text-uppercase py-3">Shop Now</a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
