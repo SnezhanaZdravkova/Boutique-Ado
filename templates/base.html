@@ -42,7 +42,104 @@
         <title>Boutique Ado {% block extratitle %}{% endblock %}</title>
     </head>
     <body>
-		<header class="container-fluid fixed-top"></header>
+		<header class="container-fluid fixed-top">
+            <div class="row">
+                <!-- We want the 3 colomns to stack vertically on everything except large and extra-large screens.
+So I'll use the coll-12 and coll-lg-4 classes on each. -->
+<!-- We also want them all vertically centred with a bit of top and bottom padding on smaller screens.
+So I'll add the my-auto py-1 and py-lg-0 classes on each. -->
+<!-- Lastly, the logo should be centred by default.
+But left-aligned on large and extra-large screens. -->
+                <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center text-lg-left">
+                    <!-- And we'll link to the home url we named in urls.py. -->
+                    <a href="{% url 'home' %}" class="nav-link main-logo-link">
+                        <h2 class="logo-font text-black my-0"><strong>Boutique</strong> Ado</h2>
+                    </a>
+                </div>
+                <!-- The next column will contain our search form. -->
+                <div class="col-12 col-lg-4 my-auto py-1 py-lg-0">
+                    <!-- Our form will have a method of get, meaning we'll be submitting searches as url parameters
+and for the moment we'll have no action for the moment -->
+                    <form method="GET" action="">
+                        <div class="input-group w-100">
+                            <!-- Inside the form, we have a 100% width input group which contains a text input with the name of q for query.
+And that's what will be submitted to the action url. -->
+                            <input class="form-control border border-black rounded-0" type="text" name="q" placeholder="Search our site">
+                            <!-- Lastly we've got a button attached to the text input using the input group append class from bootstrap.
+Which contains a search icon from font awesome. -->
+                            <div class="input-group-append">
+                                <button class="form-control btn btn-black border border-black rounded-0" type="submit">
+                                    <span class="icon">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- The last column of the header will contain the account and shopping bag links. -->
+                <div class="col-12 col-lg-4 my-auto py-1 py-lg-0">
+                    <!-- This will be an unordered list with two list elements.
+The list-inline and list-unstyled classes from bootstrap
+are used to align the lists horizontally with no bullets.
+And the first list item will be a drop-down.
+The general structure of all these forms lists and so on, by the way,
+are coming directly from the bootstrap documentation. -->
+                    <ul class="list-inline list-unstyled text-center text-lg-right my-0">
+                        <!-- The anchor element here will be the parent menu
+containing the font awesome user icon and the text my account in a paragraph.
+It uses the data toggle attribute to link up to the bootstrap JavaScript
+And open the drop-down menu when clicked.
+The drop-down menu that opens uses several Django template tags
+to determine what to display in the menu.
+If the user is authenticated we want to display a drop-down item for their profile and a link to logout.
+Otherwise, we want to display the options to log in or register if they don't have an account. -->
+                        <li class="list-inline-item dropdown">
+                            <a class="text-black nav-link" href="#" id="user-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="text-center">
+                                    <div><i class="fas fa-user fa-lg"></i></div>
+                                    <p class="my-0">My Account</p>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu border-0" aria-labelledby="user-options">
+                                <!-- If the user is authenticated and a superuser.
+We want to provide them with the link to manage the store by adding, updating, or deleting products. -->
+                                {% if request.user.is_authenticated %}
+                                    {% if request.user.is_superuser %}
+                                        <a href="" class="dropdown-item">Product Management</a>
+                                    {% endif %}
+                                    <a href="" class="dropdown-item">My Profile</a>
+                                    <!-- These account log out, account sign up, and account login URLs
+are coming from the allauth URLs we included in the project level urls.py -->
+<!-- In fact if you're curious try opening the project and going to URL such
+as accounts/broken and you'll see that all the allauth URLs and their names are there. -->
+                                    <a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a>
+                                {% else %}
+                                    <a href="{% url 'account_signup' %}" class="dropdown-item">Register</a>
+                                    <a href="{% url 'account_login' %}" class="dropdown-item">Login</a>
+                                {% endif %}
+                            </div>
+                        </li>
+                        <li class="list-inline-item">
+                            <!-- We're using the same template variable to determine which classes to apply to the element
+So if there's something in the bag the font will be bold and a different colour. -->
+                            <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link" href="">
+                                <div class="text-center">
+                                    <div><i class="fas fa-shopping-bag fa-lg"></i></div>
+                                    <p class="my-0">
+                                        {% if grand_total %}
+                                            ${{ grand_total|floatformat:2 }}
+                                        {% else %}
+                                            $0.00
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
 
 		{% if messages %}
         	<div class="message-container"></div>
