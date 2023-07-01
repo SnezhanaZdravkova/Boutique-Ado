@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-ya90e)b3-ouastl9i_h3%!6i9+tc=)w#!(f+o_*9ga0@i1)xqw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['8000-snezhanazdr-boutiqueado-5b8iitfc710.ws-eu100.gitpod.io']
+ALLOWED_HOSTS = ['8000-snezhanazdr-boutiqueado-5b8iitfc710.ws-eu101.gitpod.io']
 
 
 # Application definition
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'home',
+    'products',
 ]
 
 MIDDLEWARE = [
