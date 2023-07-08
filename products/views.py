@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
-from .models import Product
+from .models import Product, Category
 
 # Create your views here.
 
@@ -72,8 +72,14 @@ def all_products(request):
 
     products = Product.objects.all()
     query = None
+    categories = None
 
     if request.GET:
+        if 'category' in request.GET:
+            categories = request.GET['category'].split(',')
+            products = products.filter(category__name__in=categories)
+            categories = Category.objects.filter(name__in=categories)
+
         if 'q' in request.GET:
             query = request.GET['q']
             if not query:
@@ -86,6 +92,7 @@ def all_products(request):
     context = {
         'products': products,
         'search_term': query,
+        'current_categories': categories,
     }
 
     return render(request, 'products/products.html', context)
@@ -101,3 +108,59 @@ def product_detail(request, product_id):
     }
 
     return render(request, 'products/product_detail.html', context)
+
+# With search queries working let's give our users the ability to show specific
+# categories of products.
+# This will handle the clothing home wear and special offers dropdowns in the main navigation menu.
+# Let's start in main_nav.html,
+# In order to handle filtering by category, I'm gonna pass a category parameter to the
+# products URL just like we're doing with q for search queries.
+# These parameters will use the name field from the category model so we have
+# a programmatic way to access them.
+# Of course we could also use the category id.
+# But this makes the URLs a little more semantic which is nice for the user.
+# So for the first drop-down menu clothing. This top link here will point to the products URL.
+# Followed by a question mark to indicate we're about to pass the category parameter.
+# Followed by activewear and essentials separated by a comma.
+# This syntax ensures we end up with a comma-separated string in the view.
+# The other three links are pretty self-explanatory.
+# I'll simply use the same syntax with the appropriate categories for jeans shirts and then all clothing.
+# Now heading to the all_products view we need to capture this category parameter.
+# Again we'll start with it as none at the top of the view.
+# And then we'll check whether it exists in requests.get.
+# If it does I'm gonna split it into a list at the commas.
+# And then use that list to filter the current
+# query set of all products down to only products whose category name is in the list.
+# It's worth noting by the way, that this double underscore syntax is common when making queries in django.
+# Using it here means we're looking for the name field of the category model.
+# And we're able to do this because category and product are related with a foreign key.
+# An alternative way to do this would be to filter all categories down to those contained in this list
+# and then filter products based on the category ID instead of the name.
+# But this would take more queries and add unnecessary complexity.
+# It's faster and easier to just drill into the related model using this double underscore syntax.
+# Actually, though we should grab those categories anyway
+# so we can display for the user which categories they currently have selected.
+# For that, we need to import category here at the top.
+# And then we'll filter all categories down to the ones whose name is in the list from the URL.
+# This might seem redundant but remember that by doing this
+# we're converting the list of strings of category names passed through the URL
+# into a list of actual category objects, so that we can access all their fields in the template.
+# Let's call that list of category objects, current_categories.
+# and return it to the context so we can use it in the template later on.
+# If we head back to the site now you'll see that all our filtering is working for the clothing category.
+# Now all we need to do is copy the same syntax into the rest of the menu items in main_nav.html
+# You can see now why the programmatic and friendly names in this model are nice
+# since we can use the programmatic name in the URLs here
+# and we'll be able to render the friendly name in our templates.
+# Let's check one more time to make sure all of our menu items are working.
+# And looks like we've got a small bug here so let's go and check out what's going on with that.
+# It looks like there's a typo in our category's variable here at the top on line 13.
+# So that should take care of that.
+# And this all looks good now.
+# So I'm gonna head back and commit my changes before moving on.
+# But this takes care of almost the entire navigation menu.
+# Our store is really starting to take shape now
+# with users having the ability to search product names and descriptions
+# and filter the product list down to specific categories.
+# In the next video well tidy this up a bit and start working on the ability to
+# sort products in various ways.
