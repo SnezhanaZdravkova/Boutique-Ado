@@ -69,7 +69,7 @@ But left-aligned on large and extra-large screens. -->
                 <div class="col-12 col-lg-4 my-auto py-1 py-lg-0">
                     <!-- Our form will have a method of get, meaning we'll be submitting searches as url parameters
 and for the moment we'll have no action for the moment -->
-                    <form method="GET" action="">
+                    <form method="GET" action="{% url 'products' %}">
                         <div class="input-group w-100">
                             <!-- Inside the form, we have a 100% width input group which contains a text input with the name of q for query.
 And that's what will be submitted to the action url. -->
